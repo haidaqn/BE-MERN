@@ -29,9 +29,8 @@ const register = asyncHandler(async (req, res) => {
                 maxAge: 5 * 60 * 1000
             }
         );
-        // console.log(req.body);ưa
         const html = `Xin vui lòng click vào link dưới đây để hoàn tất quá trình đăng ký tài khoản của bạn.Link này sẽ hết hạn sau 5 phút kể từ bây giờ.
-                <a href=${process.env.URL_SERVER}/api/user/finalregister/${token}>Click here</a>`;
+                <a href=https://apimern-6pax.onrender.com/api/user/finalregister/${token}>Click here</a>`;
         const subject = 'Xác minh tài khoản mern';
         const data = {
             email,
