@@ -18,7 +18,7 @@ const createProduct = asyncHandler(async (req, res) => {
 const getProduct = asyncHandler(async (req, res) => {
     const { pid } = req.params;
     if (!pid) throw new Error('Missing input');
-    const response = await Product.findById(pid).populate('ratings', exclude);
+    const response = await Product.findById(pid).populate('ratings.postedBy', exclude);
     return res.status(200).json({
         success: response ? true : false,
         product: response ? response : 'Get Product missing'
