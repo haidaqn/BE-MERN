@@ -3,7 +3,7 @@ const User = require('../models/User');
 const asyncHandler = require('express-async-handler');
 const slugify = require('slugify');
 //
-const exclude = 'lastName firstName ';
+const exclude = 'lastName firstName avatar';
 const createProduct = asyncHandler(async (req, res) => {
     if (Object.keys(req.body) === 0) throw new Error('Missing input...');
     if (req?.body?.title) req.body.slug = slugify(req.body.title);
@@ -110,30 +110,32 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
 const ratings = asyncHandler(async (req, res) => {
     const id = req.user.id;
-    // console.log(id);
-    const { star, comment, pid } = req.body;
-    // console.log(id,pid);
+    const { star, comment, pid, updateAt } = req.body;
     if (!star || !pid) throw new Error('Missing required fields');
     const product = await Product.findById(pid);
     if (!product) throw new Error('Product not found');
-    const alreadyRated = product?.ratings.find((item) => item.postedBy.toString() === id);
+    const alreadyRated = product?.ratings.find((item) => item?.postedBy.toString() === id);
     if (alreadyRated) {
         await Product.updateOne(
             { ratings: { $elemMatch: alreadyRated } },
             {
                 $set: {
                     'ratings.$.star': star,
-                    'ratings.$.comment': comment
+                    'ratings.$.comment': comment,
+                    'ratings.$.updateAt': updateAt
                 }
             },
             { new: true }
         );
-    } else await Product.findByIdAndUpdate(pid, { $push: { ratings: { star, comment, postedBy: id } } }, { new: true });
+    } else
+        await Product.findByIdAndUpdate(
+            pid,
+            { $push: { ratings: { star, comment, postedBy: id, updateAt } } },
+            { new: true }
+        );
 
     const updateProduct = await Product.findById(pid);
-
     const ratingsCount = updateProduct.ratings.length;
-    // console.log(ratingsCount);
     const sumRatings = updateProduct?.ratings?.reduce((sum, item) => sum + item?.star, 0);
     updateProduct.totalRatings = Math.round((sumRatings * 10) / ratingsCount) / 10;
     await updateProduct.save();
