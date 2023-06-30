@@ -1,8 +1,9 @@
 const Product = require('../models/Product');
+const User = require('../models/User');
 const asyncHandler = require('express-async-handler');
 const slugify = require('slugify');
 //
-
+const exclude = 'lastName firstName ';
 const createProduct = asyncHandler(async (req, res) => {
     if (Object.keys(req.body) === 0) throw new Error('Missing input...');
     if (req?.body?.title) req.body.slug = slugify(req.body.title);
@@ -16,8 +17,9 @@ const createProduct = asyncHandler(async (req, res) => {
 
 const getProduct = asyncHandler(async (req, res) => {
     const { pid } = req.params;
+    const id = req.user.id;
     if (!pid) throw new Error('Missing input');
-    const response = await Product.findById(pid);
+    const response = await Product.findById(pid).populate('ratings', exclude);
     return res.status(200).json({
         success: response ? true : false,
         product: response ? response : 'Get Product missing'
