@@ -16,8 +16,10 @@ router.put('/resetpassword', userController.resetPassword);
 router.get('/finalregister/:token', userController.finalRegister);
 //
 
+router.put('/cart/delete', verifyAccessToken, userController.deleteCart);
 router.put('/cart', verifyAccessToken, userController.updateCart);
-router.put('/delete', verifyAccessToken, userController.deleteCart);
+router.put('/wishlist/delete', verifyAccessToken, userController.deleteWishList);
+router.put('/wishlist', verifyAccessToken, userController.updateWishList);
 router.put('/current', verifyAccessToken, adminController.updateUser); //
 router.put('/current/address/:uid', verifyAccessToken, userController.updateAddress); //
 

@@ -243,6 +243,35 @@ const deleteCart = asyncHandler(async (req, res) => {
     });
 });
 
+const updateWishList = asyncHandler(async (req, res) => {
+    const id = req.user.id;
+    const { pid } = req.body;
+    if (!pid) throw new Error('missing input');
+    const user = await User.findById(id);
+    const alreadyProduct = user?.wishlist?.find((item) => item.product.toString() == pid);
+    if (alreadyProduct) {
+        return res.status(200).json({
+            success: false,
+            message: "Can't add products to wishlist ..."
+        });
+    } else {
+        const response = await User.findByIdAndUpdate(id, { $push: { wishlist: { product: pid } } }, { new: true });
+        return res.status(200).json({
+            success: response ? true : false,
+            response: response ? response : 'No update wishlist in user ...'
+        });
+    }
+});
+const deleteWishList = asyncHandler(async (req, res) => {
+    const id = req.user.id;
+    const { pid } = req.body;
+    if (!pid) throw new Error('missing input');
+    const response = await User.findByIdAndUpdate(id, { $pull: { wishlist: { product: pid } } }, { new: true });
+    return res.status(200).json({
+        success: response ? true : false
+    });
+});
+
 //export
 
 module.exports = {
@@ -256,5 +285,7 @@ module.exports = {
     updateAddress,
     updateCart,
     deleteCart,
-    finalRegister
+    finalRegister,
+    updateWishList,
+    deleteWishList
 };
