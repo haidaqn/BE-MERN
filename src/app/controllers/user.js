@@ -271,7 +271,7 @@ const deleteWishList = asyncHandler(async (req, res) => {
         success: response ? true : false
     });
 });
-const exclude = 'title images price';
+const exclude = 'title images price totalRatings';
 const getWishlist = asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const user = await User.findById(userId).select('wishlist').populate('wishlist.product', exclude);
