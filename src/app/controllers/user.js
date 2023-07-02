@@ -248,7 +248,7 @@ const updateWishList = asyncHandler(async (req, res) => {
     const { pid } = req.body;
     if (!pid) throw new Error('missing input');
     const user = await User.findById(id);
-    const alreadyProduct = user?.wishlist?.find((item) => item.product.toString() == pid);
+    const alreadyProduct = user?.wishlist?.find((item) => item.toString() == pid);
     if (alreadyProduct) {
         return res.status(200).json({
             success: false,
