@@ -271,8 +271,50 @@ const deleteWishList = asyncHandler(async (req, res) => {
         success: response ? true : false
     });
 });
+const exclude = 'title images price';
+const getWishlist = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const user = await User.findById(userId).select('wishlist').populate('wishlist.product', exclude);
 
-//export
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: 'User not found'
+        });
+    }
+
+    const wishlist = user.wishlist.map((item) => item.product);
+
+    return res.status(200).json({
+        success: true,
+        wishlist
+    });
+});
+
+const getCart = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const user = await User.findById(userId).populate('cart.product', {});
+
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: 'User not found'
+        });
+    }
+
+    const cart = user.cart.map((item) => {
+        return {
+            product: item.product,
+            quantity: item.quantity,
+            color: item.color
+        };
+    });
+
+    return res.status(200).json({
+        success: true,
+        cart
+    });
+});
 
 module.exports = {
     register,
@@ -287,5 +329,7 @@ module.exports = {
     deleteCart,
     finalRegister,
     updateWishList,
-    deleteWishList
+    deleteWishList,
+    getWishlist,
+    getCart
 };
