@@ -43,7 +43,7 @@ var userSchema = new mongoose.Schema(
             }
         ],
         address: String,
-        wishlist: [{ type: mongoose.Types.ObjectId, ref: 'Product' }],
+        wishlist: [{ product: { type: mongoose.Types.ObjectId, ref: 'Product' } }],
         isBlocked: {
             type: Boolean,
             default: false
