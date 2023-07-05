@@ -73,7 +73,7 @@ const login = asyncHandler(async (req, res) => {
     if (response && (await response.isCorrectPassWord(password))) {
         const { password, refreshToken, ...userData } = response.toObject();
         const userId = response._id;
-        const accessToken = generateAccessToken(userId, role); // taoj access
+        const accessToken = generateAccessToken(userId, userData.role); // taoj access
         const newRefreshToken = generateRefreshToken(userId); // tao refresh
         //lưu refresh token vào db
         await User.findByIdAndUpdate(userId, { refreshToken: newRefreshToken }, { new: true }); // trả về data new sau khi update data
