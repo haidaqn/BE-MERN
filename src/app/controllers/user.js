@@ -71,7 +71,7 @@ const login = asyncHandler(async (req, res) => {
     }
     const response = await User.findOne({ email }); // Instance được trả về khi dùng hàm của mongodb
     if (response && (await response.isCorrectPassWord(password))) {
-        const { password, role, refreshToken, ...userData } = response.toObject();
+        const { password, refreshToken, ...userData } = response.toObject();
         const userId = response._id;
         const accessToken = generateAccessToken(userId, role); // taoj access
         const newRefreshToken = generateRefreshToken(userId); // tao refresh
