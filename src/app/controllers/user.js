@@ -190,7 +190,14 @@ const updateAddress = asyncHandler(async (req, res) => {
 
 const updateCart = asyncHandler(async (req, res) => {
     const id = req.user.id;
-    const { pid, quantity, color } = req.body;
+    const { pid, quantity, color, reset } = req.body;
+
+    if (reset === '1') {
+        const user = await User.findByIdAndUpdate(id, { cart: [] }, { new: true });
+        return res.status(200).json({
+            success: user ? true : false
+        });
+    }
     if (!pid || !quantity) throw new Error('missing input');
     const user = await User.findById(id);
     const alreadyProduct = user?.cart?.find((item) => item.product.toString() == pid);
