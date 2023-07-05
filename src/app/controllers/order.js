@@ -44,7 +44,7 @@ const updateStatus = asyncHandler(async (req, res) => {
 
 const getOrderByUser = asyncHandler(async (req, res) => {
     const id = req.user.id;
-    const response = await Order.findById({ orderBy: id });
+    const response = await Order.find({ orderBy: id });
     return res.status(200).json({
         success: response ? true : false,
         response: response ? response : 'No get order by user...'
