@@ -6,7 +6,7 @@ const orderController = require('../app/controllers/order');
 
 router.get('/status/:oid', [verifyAccessToken, isAdmin], orderController.updateStatus); //
 router.post('/', verifyAccessToken, orderController.createOrder);
-router.get('/', [verifyAccessToken, isAdmin], orderController.getOrderByAdmin); //
+router.get('/admin-orders', [verifyAccessToken, isAdmin], orderController.getOrderByAdmin); //
 router.get('/', verifyAccessToken, orderController.getOrderByUser); //
 
 //
