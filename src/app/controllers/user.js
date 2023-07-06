@@ -300,8 +300,7 @@ const getWishlist = asyncHandler(async (req, res) => {
 
 const getCart = asyncHandler(async (req, res) => {
     const userId = req.user.id;
-    const user = await User.findById(userId).populate('cart.product', 'title images price totalRatings');
-
+    const user = await User.findById(userId).populate('cart.product', exclude);
     if (!user) {
         return res.status(404).json({
             success: false,
