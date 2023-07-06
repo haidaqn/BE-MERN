@@ -18,10 +18,10 @@ router.get('/finalregister/:token', userController.finalRegister);
 //
 
 router.put('/cart/delete', verifyAccessToken, userController.deleteCart);
+router.get('/cart/getAll', verifyAccessToken, userController.getCart);
 router.put('/cart', verifyAccessToken, userController.updateCart);
 router.put('/wishlist/delete', verifyAccessToken, userController.deleteWishList);
 router.get('/wishlist/getAll', verifyAccessToken, userController.getWishlist);
-router.get('/cart/getAll', verifyAccessToken, userController.getCart);
 router.put('/wishlist', verifyAccessToken, userController.updateWishList);
 
 //
