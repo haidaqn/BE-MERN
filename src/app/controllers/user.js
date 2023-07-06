@@ -300,7 +300,7 @@ const getWishlist = asyncHandler(async (req, res) => {
 
 const getCart = asyncHandler(async (req, res) => {
     const userId = req.user.id;
-    const user = await User.findById(userId).populate('cart.product', {});
+    const user = await User.findById(userId).populate('cart.product', 'title images price totalRatings');
 
     if (!user) {
         return res.status(404).json({
@@ -308,7 +308,6 @@ const getCart = asyncHandler(async (req, res) => {
             message: 'User not found'
         });
     }
-
     const cart = user.cart.map((item) => {
         return {
             product: item.product,
