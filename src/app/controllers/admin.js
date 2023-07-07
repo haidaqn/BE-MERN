@@ -36,7 +36,7 @@ const getUser = asyncHandler(async (req, res) => {
         return res.status(200).json({
             success: true,
             count,
-            users: response ? response : 'cannot products...'
+            users: response ? response.filter((user) => +user.role !== 2003) : 'cannot users...'
         });
     } catch (err) {
         throw new Error(err.message);
