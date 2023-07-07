@@ -1,5 +1,4 @@
 const User = require('../models/User');
-const Product = require('../models/Product');
 const asyncHandler = require('express-async-handler');
 
 //
@@ -33,7 +32,7 @@ const getUser = asyncHandler(async (req, res) => {
     //
     try {
         const response = await queriesCommand.exec();
-        const count = await Product.find(formatQueries).countDocuments();
+        const count = await User.find(formatQueries).countDocuments();
         return res.status(200).json({
             success: true,
             count,
