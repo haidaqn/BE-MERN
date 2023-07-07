@@ -13,7 +13,7 @@ const getUser = asyncHandler(async (req, res) => {
     queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, (item) => `$${item}`); //chuyển thành $gte $gt
     const formatQueries = JSON.parse(queryString);
     if (queries?.name) formatQueries.name = { $regex: queries.name, $options: 'i' };
-    let queriesCommand = Product.find(formatQueries);
+    let queriesCommand = User.find(formatQueries);
 
     if (req?.query?.sort) {
         const sortBy = req.query.sort.split(',').join(' ');
