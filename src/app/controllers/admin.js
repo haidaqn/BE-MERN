@@ -32,11 +32,11 @@ const getUser = asyncHandler(async (req, res) => {
     //
     try {
         const response = await queriesCommand.exec();
-        const count = await Product.find(formatQueries).countDocuments();
+        const count = await User.find(formatQueries).countDocuments();
         return res.status(200).json({
             success: true,
             count,
-            products: response ? response : 'cannot products...'
+            users: response ? response : 'cannot products...'
         });
     } catch (err) {
         throw new Error(err.message);
