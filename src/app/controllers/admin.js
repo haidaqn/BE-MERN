@@ -4,11 +4,43 @@ const asyncHandler = require('express-async-handler');
 //
 
 const getUser = asyncHandler(async (req, res) => {
-    const response = await User.find().select('-refreshToken -password -role');
-    return res.status(200).json({
-        success: true,
-        user: response
-    });
+    const queries = { ...req.query };
+    const excludeFields = ['limit', 'page', 'sort', 'fields'];
+    excludeFields.forEach((item) => delete queries[item]); // loai bo cac truong
+
+    //format
+    let queryString = JSON.stringify(queries);
+    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, (item) => `$${item}`); //chuyển thành $gte $gt
+    const formatQueries = JSON.parse(queryString);
+    if (queries?.name) formatQueries.name = { $regex: queries.name, $options: 'i' };
+    let queriesCommand = Product.find(formatQueries);
+
+    if (req?.query?.sort) {
+        const sortBy = req.query.sort.split(',').join(' ');
+        queriesCommand = queriesCommand.sort(sortBy);
+    }
+
+    if (req?.query?.fields) {
+        const fields = req?.query?.fields.split(',').join(' ');
+        queriesCommand = queriesCommand.select(fields);
+    }
+
+    const page = +req?.query?.page || 1;
+    const limit = +req?.query?.limit || process.env.LIMIT_PRODUCTS;
+    const skip = (page - 1) * limit;
+    queriesCommand.skip(skip).limit(limit);
+    //
+    try {
+        const response = await queriesCommand.exec();
+        const count = await Product.find(formatQueries).countDocuments();
+        return res.status(200).json({
+            success: true,
+            count,
+            products: response ? response : 'cannot products...'
+        });
+    } catch (err) {
+        throw new Error(err.message);
+    }
 });
 
 const deleteUser = asyncHandler(async (req, res) => {
@@ -40,7 +72,6 @@ const updateByUserAdmin = asyncHandler(async (req, res) => {
         success: response ? true : false,
         updatedUser: response ? response : 'Some thing went wrong'
     });
-    s;
 });
 
 //
