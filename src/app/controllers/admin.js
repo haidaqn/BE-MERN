@@ -13,7 +13,16 @@ const getUser = asyncHandler(async (req, res) => {
     queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, (item) => `$${item}`); //chuyển thành $gte $gt
     const formatQueries = JSON.parse(queryString);
     if (queries?.name) formatQueries.name = { $regex: queries.name, $options: 'i' };
-    let queriesCommand = User.find(formatQueries);
+    let queriesNameOrEmail = {};
+    if (req.query?.name) {
+        queriesNameOrEmail = {
+            $or: [{ name: { $regex: queries.name, $options: 'i' } }, { email: { $regex: queries.name, $options: 'i' } }]
+        };
+    }
+
+    const queriesNew = { ...queriesNameOrEmail, ...formatQueries };
+
+    let queriesCommand = User.find(queriesNew);
 
     if (req?.query?.sort) {
         const sortBy = req.query.sort.split(',').join(' ');
@@ -32,10 +41,8 @@ const getUser = asyncHandler(async (req, res) => {
     //
     try {
         const response = await queriesCommand.exec();
-        const count = await User.find(formatQueries).countDocuments();
         return res.status(200).json({
-            success: true,
-            count,
+            success: response ? true : false,
             users: response ? response.filter((user) => +user.role !== 2003) : 'cannot users...'
         });
     } catch (err) {
