@@ -14,15 +14,16 @@ const getUser = asyncHandler(async (req, res) => {
     const formatQueries = JSON.parse(queryString);
     if (queries?.name) formatQueries.name = { $regex: queries.name, $options: 'i' };
     let queriesNameOrEmail = {};
-    if (req.query?.name) {
-        queriesNameOrEmail = {
-            $or: [{ name: { $regex: queries.name, $options: 'i' } }, { email: { $regex: queries.name, $options: 'i' } }]
-        };
+    if (queries?.name) {
+        delete formatQueries.name;
+        formatQueries['$or'] = [
+            { firstName: { $regex: req.query?.name, $options: 'i' } },
+            { lastName: { $regex: req.query?.name, $options: 'i' } },
+            { email: { $regex: req.query?.name, $options: 'i' } }
+        ];
     }
 
-    const queriesNew = { ...queriesNameOrEmail, ...formatQueries };
-
-    let queriesCommand = User.find(queriesNew);
+    let queriesCommand = User.find(formatQueries);
 
     if (req?.query?.sort) {
         const sortBy = req.query.sort.split(',').join(' ');
