@@ -13,7 +13,6 @@ const getUser = asyncHandler(async (req, res) => {
     queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, (item) => `$${item}`); //chuyển thành $gte $gt
     const formatQueries = JSON.parse(queryString);
     if (queries?.name) formatQueries.name = { $regex: queries.name, $options: 'i' };
-    let queriesNameOrEmail = {};
     if (queries?.name) {
         delete formatQueries.name;
         formatQueries['$or'] = [

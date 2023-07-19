@@ -52,7 +52,7 @@ const getOrderByUser = asyncHandler(async (req, res) => {
 });
 
 const getOrderByAdmin = asyncHandler(async (req, res) => {
-    const response = await Order.find();
+    const response = await Order.find().populate('orderBy', 'firstName lastName');
     return res.status(200).json({
         success: response ? true : false,
         response: response ? response : 'No get order by user...'
