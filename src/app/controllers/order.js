@@ -49,10 +49,11 @@ const getOrderByUser = asyncHandler(async (req, res) => {
         success: response ? true : false,
         response: response ? response : 'No get order by user...'
     });
+    z;
 });
 
 const getOrderByAdmin = asyncHandler(async (req, res) => {
-    const response = await Order.find().populate('orderBy.User', 'firstName lastName email mobile');
+    const response = await Order.find().populate('orderBy.User', 'firstName lastName email mobile').exec();
     return res.status(200).json({
         success: response ? true : false,
         response: response ? response : 'No get order by user...'
