@@ -19,10 +19,11 @@ var orderSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Coupon'
     },
-    orderBy: {
-        type: mongoose.Types.ObjectId,
-        ref: 'User'
-    }
+    orderBy: [
+        {
+            User: { type: mongoose.Types.ObjectId, ref: 'User' }
+        }
+    ]
 });
 
 //Export the model
