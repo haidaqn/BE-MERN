@@ -22,8 +22,10 @@ var orderSchema = new mongoose.Schema(
         },
         orderBy: [
             {
-                type: mongoose.Types.ObjectId,
-                ref: 'User'
+                user: {
+                    type: mongoose.Types.ObjectId,
+                    ref: 'User'
+                }
             }
         ]
     },
