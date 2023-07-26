@@ -20,14 +20,7 @@ var orderSchema = new mongoose.Schema(
             type: mongoose.Types.ObjectId,
             ref: 'Coupon'
         },
-        orderBy: [
-            {
-                user: {
-                    type: mongoose.Types.ObjectId,
-                    ref: 'User'
-                }
-            }
-        ]
+        orderBy: { type: mongoose.Types.ObjectId, ref: 'User' }
     },
     {
         timestamps: true

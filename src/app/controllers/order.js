@@ -51,9 +51,8 @@ const getOrderByUser = asyncHandler(async (req, res) => {
     });
 });
 
-const orderExclude = 'firstName lastName email mobile';
 const getOrderByAdmin = asyncHandler(async (req, res) => {
-    const response = await Order.find().populate('orderBy.user', orderExclude);
+    const response = await Order.find();
     return res.status(200).json({
         success: response ? true : false,
         response: response ? response : 'No get order by Admin...'

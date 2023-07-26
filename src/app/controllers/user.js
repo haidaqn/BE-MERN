@@ -282,16 +282,13 @@ const exclude = 'title images price totalRatings';
 const getWishlist = asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const user = await User.findById(userId).select('wishlist').populate('wishlist.product', exclude);
-
     if (!user) {
         return res.status(404).json({
             success: false,
             message: 'User not found'
         });
     }
-
     const wishlist = user.wishlist.map((item) => item.product);
-
     return res.status(200).json({
         success: true,
         wishlist

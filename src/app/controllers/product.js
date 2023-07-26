@@ -5,9 +5,14 @@ const slugify = require('slugify');
 //
 const exclude = 'lastName firstName avatar';
 const createProduct = asyncHandler(async (req, res) => {
-    if (Object.keys(req.body) === 0) throw new Error('Missing input...');
-    if (req?.body?.title) req.body.slug = slugify(req.body.title);
-
+    const { title, price, description, brand, category, color } = req.body;
+    if (!(title && price && description && brand && category && color)) throw new Error('Missing input...');
+    req.body.slug = slugify(title);
+    // console.log(req.files);
+    const thumbnailFile = req.files['thumb'][0];
+    const imageFiles = req.files['images']?.map((file) => file.path);
+    if (thumbnailFile) req.body.thumb = thumbnailFile;
+    if (imageFiles) req.body.images = imageFiles;
     const newProduct = await Product.create(req.body);
     return res.status(200).json({
         success: newProduct ? true : false,
@@ -144,7 +149,6 @@ const ratings = asyncHandler(async (req, res) => {
 });
 
 const uploadImagesProduct = asyncHandler(async (req, res) => {
-    // console.log(req.files);
     const id = req.params.pid;
     if (!req.files) throw new Error('Missing input...');
     const response = await Product.findByIdAndUpdate(
